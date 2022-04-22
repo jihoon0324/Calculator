@@ -9,7 +9,10 @@ public class Calculator extends JFrame {
         inputSpace.setEditable(false);
 inputSpace.setBackground(Color.white);
 inputSpace.setHorizontalAlignment(JTextField.RIGHT);
-input
+inputSpace.setFont(new Font("Arial",Font.BOLD,50) );
+inputSpace.setBounds(8,10,270,70);
+
+
         setTitle("Calculator");
         setVisible(true);
         setSize(300,370);
