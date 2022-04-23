@@ -1,9 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Calculator extends JFrame {
     private JTextField inputSpace;
-
+    private String num="";
+    private ArrayList<String> equation = new ArrayList<String>();
     public Calculator() {
         setLayout(null);
         inputSpace = new JTextField();
@@ -21,12 +25,11 @@ public class Calculator extends JFrame {
             buttons[i] = new JButton(button_name[i]);
             buttons[i].setFont(new Font("Arial", Font.BOLD, 20));
             if (button_name[i].equals("c")) buttons[i].setBackground(Color.RED);
-            else if ((i >= 4 && i <= 6) || (i >= 8 && i <= 10) || (i >= 12 && i <= 14))
-                buttons[i].setBackground(Color.BLACK);
+            else if ((i >= 4 && i <= 6) || (i >= 8 && i <= 10) || (i >= 12 && i <= 14)) buttons[i].setBackground(Color.BLACK);
             else buttons[i].setBackground(Color.GRAY);
             buttons[i].setForeground(Color.WHITE);
             buttons[i].setBorderPainted(false);
-
+            buttons[i].addActionListener(new PadActionListener());
             buttonPanel.add(buttons[i]);
         }
 
@@ -42,5 +45,57 @@ public class Calculator extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    // funtions
+    class PadActionListener implements ActionListener {
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String operation = e.getActionCommand();
+            if (operation.equals("c")) inputSpace.setText("");
+            else if (operation.equals(("="))) {
+                String result=Double.toString(caculate(inputSpace.getText()));
+                inputSpace.setText(""+result);
+                num="";
+            }
+            else inputSpace.setText(inputSpace.getText() + e.getActionCommand());
+        }
+    }
+    private  void fullTextParsing(String inputText){
+        equation.clear();
+        for(int i =0; i< inputText.length() ;i++){
+            char ch= inputText.charAt(i);
+            if(ch =='-' | ch =='x' | ch =='/'|ch =='+') {
+                equation.add(num);
+                num ="";
+                equation.add(ch+"");
+            }
+            else{
+                num = num +ch;
+            }
+
+        }
+        equation.add(num);
+
+    }
+    public double caculate(String inputText){
+     fullTextParsing(inputText);
+     double prev=0;
+     double current =0;
+     String mode="";
+     for(String s :equation){
+         if(s.equals("+")) mode ="add";
+         else if(s.equals("-")) mode ="sub";
+         else if(s.equals("x")) mode ="mul";
+         else if(s.equals("/")) mode ="div";
+         else {
+             current = Double.parseDouble(s);
+             if(mode.equals("sub"))prev -= current;
+             else  if(mode.equals("add"))prev += current;
+             else  if(mode.equals("mul"))prev *= current;
+             else  if(mode.equals("div"))prev /= current;
+             else prev = current;
+         }
+     }
+    return prev;
+    }
 }
