@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 public class Calculator extends JFrame {
     private JTextField inputSpace;
-    private String num="";
+    private String num = "";
     private ArrayList<String> equation = new ArrayList<String>();
+
+    private String prev_operation = "";
+
     public Calculator() {
         setLayout(null);
         inputSpace = new JTextField();
@@ -25,7 +28,8 @@ public class Calculator extends JFrame {
             buttons[i] = new JButton(button_name[i]);
             buttons[i].setFont(new Font("Arial", Font.BOLD, 20));
             if (button_name[i].equals("c")) buttons[i].setBackground(Color.RED);
-            else if ((i >= 4 && i <= 6) || (i >= 8 && i <= 10) || (i >= 12 && i <= 14)) buttons[i].setBackground(Color.BLACK);
+            else if ((i >= 4 && i <= 6) || (i >= 8 && i <= 10) || (i >= 12 && i <= 14))
+                buttons[i].setBackground(Color.BLACK);
             else buttons[i].setBackground(Color.GRAY);
             buttons[i].setForeground(Color.WHITE);
             buttons[i].setBorderPainted(false);
@@ -53,49 +57,59 @@ public class Calculator extends JFrame {
             String operation = e.getActionCommand();
             if (operation.equals("c")) inputSpace.setText("");
             else if (operation.equals(("="))) {
-                String result=Double.toString(caculate(inputSpace.getText()));
-                inputSpace.setText(""+result);
-                num="";
+                String result = Double.toString(caculate(inputSpace.getText()));
+                inputSpace.setText("" + result);
+                num = "";
+            } else if (operation.equals("+") || operation.equals("-") || operation.equals("x") || operation.equals("/")) {
+                if (inputSpace.getText().equals("") && operation.equals("-")) {
+                    inputSpace.setText(inputSpace.getText() + e.getActionCommand());
+                } else if (!(inputSpace.getText().equals("+") || inputSpace.getText().equals("-") || inputSpace.getText().equals("x") || inputSpace.getText().equals("/") || inputSpace.getText().equals(""))) {
+                    inputSpace.setText(inputSpace.getText() + e.getActionCommand());
+                }
+            } else {
+                inputSpace.setText(inputSpace.getText() + e.getActionCommand());
             }
-            else inputSpace.setText(inputSpace.getText() + e.getActionCommand());
+            prev_operation = e.getActionCommand();
+
         }
     }
-    private  void fullTextParsing(String inputText){
+
+    private void fullTextParsing(String inputText) {
         equation.clear();
-        for(int i =0; i< inputText.length() ;i++){
-            char ch= inputText.charAt(i);
-            if(ch =='-' | ch =='x' | ch =='/'|ch =='+') {
+        for (int i = 0; i < inputText.length(); i++) {
+            char ch = inputText.charAt(i);
+            if (ch == '-' | ch == 'x' | ch == '/' | ch == '+') {
                 equation.add(num);
-                num ="";
-                equation.add(ch+"");
-            }
-            else{
-                num = num +ch;
+                num = "";
+                equation.add(ch + "");
+            } else {
+                num = num + ch;
             }
 
         }
         equation.add(num);
-
+        equation.remove("");
     }
-    public double caculate(String inputText){
-     fullTextParsing(inputText);
-     double prev=0;
-     double current =0;
-     String mode="";
-     for(String s :equation){
-         if(s.equals("+")) mode ="add";
-         else if(s.equals("-")) mode ="sub";
-         else if(s.equals("x")) mode ="mul";
-         else if(s.equals("/")) mode ="div";
-         else {
-             current = Double.parseDouble(s);
-             if(mode.equals("sub"))prev -= current;
-             else  if(mode.equals("add"))prev += current;
-             else  if(mode.equals("mul"))prev *= current;
-             else  if(mode.equals("div"))prev /= current;
-             else prev = current;
-         }
-     }
-    return prev;
+
+    public double caculate(String inputText) {
+        fullTextParsing(inputText);
+        double prev = 0;
+        double current = 0;
+        String mode = "";
+        for (String s : equation) {
+            if (s.equals("+")) mode = "add";
+            else if (s.equals("-")) mode = "sub";
+            else if (s.equals("x")) mode = "mul";
+            else if (s.equals("/")) mode = "div";
+            else {
+                current = Double.parseDouble(s);
+                if (mode.equals("sub")) prev -= current;
+                else if (mode.equals("add")) prev += current;
+                else if (mode.equals("mul")) prev *= current;
+                else if (mode.equals("div")) prev /= current;
+                else prev = current;
+            }
+        }
+        return prev;
     }
 }
