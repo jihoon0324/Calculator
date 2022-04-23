@@ -78,7 +78,7 @@ public class Calculator extends JFrame {
         equation.clear();
         for (int i = 0; i < inputText.length(); i++) {
             char ch = inputText.charAt(i);
-            if (ch == '-' | ch == 'x' | ch == '/' | ch == '+') {
+            if (ch == '-' || ch == 'x' || ch == '/' || ch == '+') {
                 equation.add(num);
                 num = "";
                 equation.add(ch + "");
@@ -106,7 +106,19 @@ public class Calculator extends JFrame {
             else {
                 if (mode.equals("mul") || mode.equals("div") && !s.equals("+") && !s.equals("-") && !s.equals("x") && !s.equals("/")){
                    Double one = Double.parseDouble(equation.get(i-2));
+                   Double two= Double.parseDouble(equation.get(i));
+                   Double result =0.0;
+                   if(mode.equals("mul"))
+                   {
+                       result =one*two;
 
+                   } else if (mode.equals("div")) {
+                        result =one/two;
+                   }
+equation.add(i+1,Double.toString((result)));
+                   for(int j=0; j<3;j++){
+                       equation.remove(i-2);
+                   }
                 }
             }
 
@@ -115,16 +127,15 @@ public class Calculator extends JFrame {
         for (String s : equation) {
             if (s.equals("+")) mode = "add";
             else if (s.equals("-")) mode = "sub";
-            else if (s.equals("x")) mode = "mul";
-            else if (s.equals("/")) mode = "div";
+
             else {
                 current = Double.parseDouble(s);
                 if (mode.equals("sub")) prev -= current;
                 else if (mode.equals("add")) prev += current;
-                else if (mode.equals("mul")) prev *= current;
-                else if (mode.equals("div")) prev /= current;
+
                 else prev = current;
             }
+            prev =Math.round(prev*100000)/100000.0;
         }
         return prev;
     }
