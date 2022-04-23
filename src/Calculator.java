@@ -96,6 +96,22 @@ public class Calculator extends JFrame {
         double prev = 0;
         double current = 0;
         String mode = "";
+
+        for (int i = 0; i < equation.size(); i++) {
+            String s = equation.get(i);
+            if (s.equals("+")) mode = "add";
+            else if (s.equals("-")) mode = "sub";
+            else if (s.equals("x")) mode = "mul";
+            else if (s.equals("/")) mode = "div";
+            else {
+                if (mode.equals("mul") || mode.equals("div") && !s.equals("+") && !s.equals("-") && !s.equals("x") && !s.equals("/")){
+                   Double one = Double.parseDouble(equation.get(i-2));
+
+                }
+            }
+
+        }
+
         for (String s : equation) {
             if (s.equals("+")) mode = "add";
             else if (s.equals("-")) mode = "sub";
